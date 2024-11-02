@@ -27,7 +27,7 @@ public class Activity {
 
     @Column(nullable = false)
     @Getter
-    private String duration;
+    private Integer duration;
 
     @Column(nullable = false)
     @Getter

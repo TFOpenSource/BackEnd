@@ -2,12 +2,11 @@ package com.acme.nutrimove.platform.fitness.application.internal.commandservices
 
 import com.acme.nutrimove.platform.fitness.domain.model.aggregates.Activity;
 import com.acme.nutrimove.platform.fitness.domain.model.commands.CreateActivityCommand;
-import com.acme.nutrimove.platform.fitness.domain.model.queries.GetAllActivityByNameQuery;
+import com.acme.nutrimove.platform.fitness.domain.model.commands.DeleteActivityCommand;
 import com.acme.nutrimove.platform.fitness.domain.services.ActivityCommandService;
 import com.acme.nutrimove.platform.fitness.infrastructure.persistence.jpa.ActivityRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,10 +23,16 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
     @Override
     public Optional<Activity> handle(CreateActivityCommand command) {
         if (activityRepository.existsByNameAndDescription(command.name(), command.description())) {
-            throw new IllegalArgumentException("Favorite source with same source ID already exists for this news API key");
+            throw new IllegalArgumentException("Activity with same name already exists for this description");
         }
         var activity = new Activity(command);
         var createActivity = this.activityRepository.save(activity);
         return Optional.of(createActivity);
     }
+    @Override
+    public void handle(DeleteActivityCommand command) {
+        activityRepository.deleteById(command.activityId());
+    }
+
+
 }

@@ -1,6 +1,7 @@
 package com.acme.nutrimove.platform.fitness.interfaces.rest;
 
 import com.acme.nutrimove.platform.fitness.domain.model.aggregates.Activity;
+import com.acme.nutrimove.platform.fitness.domain.model.commands.DeleteActivityCommand;
 import com.acme.nutrimove.platform.fitness.domain.model.queries.GetActivityByIdQuery;
 import com.acme.nutrimove.platform.fitness.domain.model.queries.GetAllActivityByNameQuery;
 import com.acme.nutrimove.platform.fitness.domain.services.ActivityCommandService;
@@ -78,5 +79,22 @@ public class ActivityController {
                 .toList();
         return ResponseEntity.ok(activityResources);
     }
+
+    @Operation(summary = "Delete an activity", description = "Delete an activity by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Activity deleted"),
+            @ApiResponse(responseCode = "400", description = "Activity not found"),
+    })
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteActivity(@PathVariable Long id) {
+        Optional<Activity> activity = activityQueryService.handle(new GetActivityByIdQuery(id));
+        if (activity.isPresent()) {
+            activityCommandService.handle(new DeleteActivityCommand(id));
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
 }
