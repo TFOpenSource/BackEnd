@@ -1,9 +1,9 @@
 package com.acme.nutrimove.platform.fitness.domain.model.aggregates;
-
+import com.acme.nutrimove.platform.fitness.domain.model.commands.CreateActivityCommand;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.domain.AbstractAggregateRoot;
+
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @Getter
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class Activity extends AbstractAggregateRoot<Activity> {
+public class Activity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,19 +27,19 @@ public class Activity extends AbstractAggregateRoot<Activity> {
 
     @Column(nullable = false)
     @Getter
-    private Float price;
+    private String duration;
 
     @Column(nullable = false)
     @Getter
-    private Integer monthDuration;
+    private Long userId;
 
-    @Column(nullable = false)
-    @Getter
-    private String trial;
+    public Activity(CreateActivityCommand command) {
+        this.name = command.name();
+        this.description = command.description();
+        this.duration = command.duration();
+        this.userId = command.user_id();
 
-    @Column(nullable = false)
-    @Getter
-    private String userId;
+    }
 
-    protected Activity() {}
+    public Activity() {}
 }
