@@ -1,7 +1,6 @@
 package com.acme.nutrimove.platform.fitness.domain.services;
 
 import com.acme.nutrimove.platform.fitness.domain.model.aggregates.Activity;
-import com.acme.nutrimove.platform.fitness.domain.model.commands.CreateActivityCommand;
 import com.acme.nutrimove.platform.fitness.domain.model.queries.GetActivityByIdQuery;
 import com.acme.nutrimove.platform.fitness.domain.model.queries.GetAllActivityByNameQuery;
 
