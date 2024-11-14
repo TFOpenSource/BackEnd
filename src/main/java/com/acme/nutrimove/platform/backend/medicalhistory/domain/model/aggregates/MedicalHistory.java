@@ -18,25 +18,26 @@ public class MedicalHistory {
     @Column(nullable = false)
     private Long userId;
 
-    @Setter
+    @Setter // Permite actualizar la fecha
     @Column(nullable = false)
     private LocalDate date;
 
-    @Setter
+    @Setter // Permite actualizar la condición médica
     @Column(name = "medical_condition", nullable = false)
     private String medicalCondition;
 
-    @Setter
+    @Setter // Permite actualizar la descripción
     @Column(nullable = false)
     private String description;
 
-    public MedicalHistory() {}
+    // Constructor vacío requerido por JPA
+    protected MedicalHistory() {}
 
+    // Constructor con parámetros para inicialización
     public MedicalHistory(Long userId, LocalDate date, String medicalCondition, String description) {
         this.userId = userId;
         this.date = date;
         this.medicalCondition = medicalCondition;
         this.description = description;
     }
-
 }

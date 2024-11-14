@@ -10,7 +10,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDate;
 
 @Configuration
-@Getter
+@Getter // Genera getters para todos los campos
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 public class Achievement {
@@ -22,12 +22,11 @@ public class Achievement {
     @Column(nullable = false)
     private Long userId;  // Foreign Key to User
 
-    // Métodos setters necesarios para actualizar campos mutables
-    @Setter
+    @Setter // Genera setter para campo mutable
     @Column(nullable = false)
     private String achievement;
 
-    @Setter
+    @Setter // Genera setter para campo mutable
     @Column(nullable = false)
     private LocalDate date;
 
@@ -35,10 +34,10 @@ public class Achievement {
     protected Achievement() {
     }
 
+    // Constructor usando comando para inicialización
     public Achievement(CreateAchievementCommand command) {
         this.userId = command.userId();
         this.achievement = command.achievement();
         this.date = command.date();
     }
-
 }

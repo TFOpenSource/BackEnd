@@ -10,9 +10,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.time.LocalDateTime;
 
+@Getter
 @Configuration
 @EnableJpaAuditing
-@Getter
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 public class User {
@@ -45,10 +45,12 @@ public class User {
     @Column(nullable = false)
     private Privacy privacy;
 
+    // Enum para definir el nivel de privacidad del usuario
     public enum Privacy {
         PRIVATE, PUBLIC
     }
 
+    // Constructor que recibe el comando de creación
     public User(CreateUserCommand command) {
         this.name = command.name();
         this.lastname = command.lastname();
@@ -58,6 +60,9 @@ public class User {
         this.createdAt = LocalDateTime.now();
     }
 
+    // Constructor vacío requerido por JPA
     public User() {}
+
+    // Métodos getter y setter para cada campo
 
 }

@@ -26,23 +26,34 @@ public class MedicalHistoryController {
 
     private final MedicalHistoryCommandService commandService;
     private final MedicalHistoryQueryService queryService;
+    private final CreateMedicalHistoryCommandFromResourceAssembler createAssembler;
+    private final UpdateMedicalHistoryCommandFromResourceAssembler updateAssembler;
+    private final MedicalHistoryResourceFromEntityAssembler resourceAssembler;
 
-    public MedicalHistoryController(MedicalHistoryCommandService commandService, MedicalHistoryQueryService queryService) {
+    public MedicalHistoryController(
+            MedicalHistoryCommandService commandService,
+            MedicalHistoryQueryService queryService,
+            CreateMedicalHistoryCommandFromResourceAssembler createAssembler,
+            UpdateMedicalHistoryCommandFromResourceAssembler updateAssembler,
+            MedicalHistoryResourceFromEntityAssembler resourceAssembler) {
         this.commandService = commandService;
         this.queryService = queryService;
+        this.createAssembler = createAssembler;
+        this.updateAssembler = updateAssembler;
+        this.resourceAssembler = resourceAssembler;
     }
 
     @PostMapping
     public ResponseEntity<MedicalHistoryResource> createMedicalHistory(@RequestBody CreateMedicalHistoryResource resource) {
-        Optional<MedicalHistory> medicalHistory = commandService.handle(CreateMedicalHistoryCommandFromResourceAssembler.toCommand(resource));
-        return medicalHistory.map(mh -> new ResponseEntity<>(MedicalHistoryResourceFromEntityAssembler.toResourceFromEntity(mh), CREATED))
+        Optional<MedicalHistory> medicalHistory = commandService.handle(createAssembler.toCommand(resource));
+        return medicalHistory.map(mh -> new ResponseEntity<>(resourceAssembler.toResourceFromEntity(mh), CREATED))
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @GetMapping("/{id}/{userId}")
     public ResponseEntity<MedicalHistoryResource> getMedicalHistoryById(@PathVariable Long id, @PathVariable Long userId) {
         Optional<MedicalHistory> medicalHistory = queryService.handle(new GetMedicalHistoryByIdQuery(id, userId));
-        return medicalHistory.map(mh -> ResponseEntity.ok(MedicalHistoryResourceFromEntityAssembler.toResourceFromEntity(mh)))
+        return medicalHistory.map(mh -> ResponseEntity.ok(resourceAssembler.toResourceFromEntity(mh)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
@@ -50,15 +61,15 @@ public class MedicalHistoryController {
     public ResponseEntity<List<MedicalHistoryResource>> getAllMedicalHistories() {
         List<MedicalHistory> medicalHistories = queryService.getAllMedicalHistories();
         List<MedicalHistoryResource> resources = medicalHistories.stream()
-                .map(MedicalHistoryResourceFromEntityAssembler::toResourceFromEntity)
+                .map(resourceAssembler::toResourceFromEntity)
                 .toList();
         return ResponseEntity.ok(resources);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MedicalHistoryResource> updateMedicalHistory(@PathVariable Long id, @RequestBody UpdateMedicalHistoryResource resource) {
-        Optional<MedicalHistory> updatedMedicalHistory = commandService.handle(UpdateMedicalHistoryCommandFromResourceAssembler.toCommand(id, resource));
-        return updatedMedicalHistory.map(mh -> ResponseEntity.ok(MedicalHistoryResourceFromEntityAssembler.toResourceFromEntity(mh)))
+    public ResponseEntity<MedicalHistoryResource> updateMedicalHistory(@PathVariable Long id, @RequestParam Long userId, @RequestBody UpdateMedicalHistoryResource resource) {
+        Optional<MedicalHistory> updatedMedicalHistory = commandService.handle(updateAssembler.toCommand(id, userId, resource));
+        return updatedMedicalHistory.map(mh -> ResponseEntity.ok(resourceAssembler.toResourceFromEntity(mh)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 

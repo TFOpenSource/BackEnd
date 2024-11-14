@@ -2,15 +2,17 @@ package com.acme.nutrimove.platform.backend.medicalhistory.interfaces.rest.trans
 
 import com.acme.nutrimove.platform.backend.medicalhistory.domain.model.commands.UpdateMedicalHistoryCommand;
 import com.acme.nutrimove.platform.backend.medicalhistory.interfaces.rest.resources.UpdateMedicalHistoryResource;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UpdateMedicalHistoryCommandFromResourceAssembler {
 
-    public static UpdateMedicalHistoryCommand toCommand(Long id, UpdateMedicalHistoryResource resource) {
+    public UpdateMedicalHistoryCommand toCommand(Long id, Long userId, UpdateMedicalHistoryResource resource) {
         return new UpdateMedicalHistoryCommand(
                 id,
-                resource.userId(),
+                userId,
                 resource.date(),
-                resource.condition(),
+                resource.medicalCondition(),
                 resource.description()
         );
     }

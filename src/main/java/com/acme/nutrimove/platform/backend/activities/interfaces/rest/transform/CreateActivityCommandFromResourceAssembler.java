@@ -6,6 +6,11 @@ import com.acme.nutrimove.platform.backend.activities.interfaces.rest.resources.
 public class CreateActivityCommandFromResourceAssembler {
 
     public static CreateActivityCommand toCommand(CreateActivityResource resource) {
-        return new CreateActivityCommand(resource.name(), resource.description(), resource.duration(), resource.userId());
+        return new CreateActivityCommand(
+                resource.name(),
+                resource.description(),
+                resource.duration(),
+                resource.userId()
+        );
     }
 }

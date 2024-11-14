@@ -2,4 +2,9 @@ package com.acme.nutrimove.platform.backend.medicalhistory.interfaces.rest.resou
 
 import java.time.LocalDate;
 
-public record CreateMedicalHistoryResource(Long userId, LocalDate date, String condition, String description) {}
+public record CreateMedicalHistoryResource(
+        Long userId,
+        LocalDate date,
+        String medicalCondition,
+        String description
+) {}
