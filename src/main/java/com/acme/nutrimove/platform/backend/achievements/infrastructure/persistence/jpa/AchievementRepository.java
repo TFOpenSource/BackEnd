@@ -4,7 +4,6 @@ import com.acme.nutrimove.platform.backend.achievements.domain.model.aggregates.
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
-import java.util.List;
 
 public interface AchievementRepository extends JpaRepository<Achievement, Long> {
     Optional<Achievement> findByIdAndUserId(Long achievementId, Long userId);
