@@ -1,6 +1,7 @@
 package com.acme.nutrimove.platform.backend.achievements.domain.model.aggregates;
 
 import com.acme.nutrimove.platform.backend.achievements.domain.model.commands.CreateAchievementCommand;
+import com.acme.nutrimove.platform.backend.user.domain.model.aggregates.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,10 +20,10 @@ public class Achievement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long userId;  // Foreign Key to User
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    // Métodos setters necesarios para actualizar campos mutables
     @Setter
     @Column(nullable = false)
     private String achievement;
@@ -31,14 +32,14 @@ public class Achievement {
     @Column(nullable = false)
     private LocalDate date;
 
-    // Constructor vacío necesario para JPA
+    // Constructor vacío requerido por JPA
     protected Achievement() {
     }
 
-    public Achievement(CreateAchievementCommand command) {
-        this.userId = command.userId();
+    // Constructor usando el comando CreateAchievementCommand
+    public Achievement(CreateAchievementCommand command, User user) {
+        this.user = user;
         this.achievement = command.achievement();
         this.date = command.date();
     }
-
 }
