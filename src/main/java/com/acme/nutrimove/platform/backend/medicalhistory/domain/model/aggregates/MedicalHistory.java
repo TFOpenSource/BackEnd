@@ -1,5 +1,6 @@
 package com.acme.nutrimove.platform.backend.medicalhistory.domain.model.aggregates;
 
+import com.acme.nutrimove.platform.backend.user.domain.model.aggregates.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,8 +16,9 @@ public class MedicalHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Setter
     @Column(nullable = false)
@@ -32,11 +34,10 @@ public class MedicalHistory {
 
     public MedicalHistory() {}
 
-    public MedicalHistory(Long userId, LocalDate date, String medicalCondition, String description) {
-        this.userId = userId;
+    public MedicalHistory(User user, LocalDate date, String medicalCondition, String description) {
+        this.user = user;
         this.date = date;
         this.medicalCondition = medicalCondition;
         this.description = description;
     }
-
 }
