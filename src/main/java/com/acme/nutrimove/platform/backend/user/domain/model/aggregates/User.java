@@ -1,5 +1,6 @@
 package com.acme.nutrimove.platform.backend.user.domain.model.aggregates;
 
+import com.acme.nutrimove.platform.backend.goal.domain.model.aggregates.Goal;
 import com.acme.nutrimove.platform.backend.user.domain.model.commands.CreateUserCommand;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Configuration
 @EnableJpaAuditing
@@ -44,6 +46,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Privacy privacy;
+
+    @OneToMany(mappedBy = "userId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Goal> goals;
 
     public enum Privacy {
         PRIVATE, PUBLIC

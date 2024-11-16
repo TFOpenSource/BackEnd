@@ -34,8 +34,10 @@ public class Goal {
     @Setter
     private LocalDate end_date;
 
-    @Column(nullable = false)
+
+    @Column(name = "userId", nullable = false)
     @Getter
+    @Setter
     private Long userId;
 
     //JPA
