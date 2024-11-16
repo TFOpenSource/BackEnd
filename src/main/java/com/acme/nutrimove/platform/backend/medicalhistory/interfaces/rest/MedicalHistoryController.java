@@ -1,9 +1,7 @@
 package com.acme.nutrimove.platform.backend.medicalhistory.interfaces.rest;
 
 import com.acme.nutrimove.platform.backend.medicalhistory.domain.model.aggregates.MedicalHistory;
-import com.acme.nutrimove.platform.backend.medicalhistory.domain.model.commands.CreateMedicalHistoryCommand;
 import com.acme.nutrimove.platform.backend.medicalhistory.domain.model.commands.DeleteMedicalHistoryCommand;
-import com.acme.nutrimove.platform.backend.medicalhistory.domain.model.commands.UpdateMedicalHistoryCommand;
 import com.acme.nutrimove.platform.backend.medicalhistory.domain.model.queries.GetMedicalHistoryByIdQuery;
 import com.acme.nutrimove.platform.backend.medicalhistory.domain.services.MedicalHistoryCommandService;
 import com.acme.nutrimove.platform.backend.medicalhistory.domain.services.MedicalHistoryQueryService;
