@@ -8,7 +8,7 @@ public class SleepResourceFromEntityAssembler {
     public static SleepResource toResourceFromEntity(Sleep sleep) {
         return new SleepResource(
                 sleep.getId(),
-                sleep.getUserId(),
+                sleep.getUser() != null ? sleep.getUser().getId() : null,
                 sleep.getDate(),
                 sleep.getHoursSlept(),
                 sleep.getQuality().toString()
