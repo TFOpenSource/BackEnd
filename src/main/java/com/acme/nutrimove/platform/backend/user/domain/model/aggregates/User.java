@@ -1,6 +1,6 @@
 package com.acme.nutrimove.platform.backend.user.domain.model.aggregates;
 
-import com.acme.nutrimove.platform.backend.activities.domain.model.aggregates.Activity;
+import com.acme.nutrimove.platform.backend.goal.domain.model.aggregates.Goal;
 import com.acme.nutrimove.platform.backend.user.domain.model.commands.CreateUserCommand;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -48,8 +48,8 @@ public class User {
     @Column(nullable = false)
     private Privacy privacy;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Activity> activities = new ArrayList<>();
+    @OneToMany(mappedBy = "userId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Goal> goals;
 
     public enum Privacy {
         PRIVATE, PUBLIC
