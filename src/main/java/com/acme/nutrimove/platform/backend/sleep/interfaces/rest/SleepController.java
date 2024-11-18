@@ -11,6 +11,8 @@ import com.acme.nutrimove.platform.backend.sleep.interfaces.rest.resources.Updat
 import com.acme.nutrimove.platform.backend.sleep.interfaces.rest.transform.CreateSleepCommandFromResourceAssembler;
 import com.acme.nutrimove.platform.backend.sleep.interfaces.rest.transform.SleepResourceFromEntityAssembler;
 import com.acme.nutrimove.platform.backend.sleep.interfaces.rest.transform.UpdateSleepCommandFromResourceAssembler;
+import com.acme.nutrimove.platform.backend.user.domain.model.aggregates.User;
+import com.acme.nutrimove.platform.backend.user.domain.services.UserQueryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -31,10 +33,14 @@ public class SleepController {
 
     private final SleepQueryService sleepQueryService;
     private final SleepCommandService sleepCommandService;
+    private final UserQueryService userQueryService;
 
-    public SleepController(SleepQueryService sleepQueryService, SleepCommandService sleepCommandService) {
+    public SleepController(SleepQueryService sleepQueryService,
+                           SleepCommandService sleepCommandService,
+                           UserQueryService userQueryService) {
         this.sleepQueryService = sleepQueryService;
         this.sleepCommandService = sleepCommandService;
+        this.userQueryService = userQueryService;
     }
 
     @Operation(summary = "Create a sleep record", description = "Create a sleep record with the provided details")
@@ -44,9 +50,20 @@ public class SleepController {
     })
     @PostMapping
     public ResponseEntity<SleepResource> createSleep(@RequestBody CreateSleepResource resource) {
-        Optional<Sleep> sleep = sleepCommandService
-                .handle(CreateSleepCommandFromResourceAssembler.toCommand(resource));
-        return sleep.map(createdSleep -> new ResponseEntity<>(SleepResourceFromEntityAssembler.toResourceFromEntity(createdSleep), CREATED))
+        // Buscar al usuario por ID
+        Optional<User> userOptional = userQueryService.findById(resource.userId());
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        User user = userOptional.get();
+
+        // Crear el comando
+        var command = CreateSleepCommandFromResourceAssembler.toCommand(resource, user);
+
+        // Ejecutar el comando y guardar la entidad Sleep
+        Optional<Sleep> sleep = sleepCommandService.handle(command);
+        return sleep.map(createdSleep -> new ResponseEntity<>(
+                        SleepResourceFromEntityAssembler.toResourceFromEntity(createdSleep), CREATED))
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 

@@ -11,9 +11,9 @@ import java.util.Optional;
 @Repository
 public interface SleepRepository extends JpaRepository<Sleep, Long> {
 
-    // Encuentra todos los registros de sueño por userId
     List<Sleep> findAllByUserId(Long userId);
 
-    // Encuentra un registro de sueño específico por userId y fecha
+    List<Sleep> findByUserId(Long userId);
+
     Optional<Sleep> findByUserIdAndDate(Long userId, LocalDateTime date);
 }
