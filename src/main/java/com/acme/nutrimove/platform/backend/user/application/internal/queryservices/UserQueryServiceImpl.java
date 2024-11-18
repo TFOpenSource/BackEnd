@@ -30,6 +30,9 @@ public class UserQueryServiceImpl implements UserQueryService {
     }
 
     @Override
+    public Optional<User> findById(Long userId) { return userRepository.findById(userId); }
+
+    @Override
     public Optional<User> handle(GetUserByIdQuery query) {
         return userRepository.findById(query.id());
     }
