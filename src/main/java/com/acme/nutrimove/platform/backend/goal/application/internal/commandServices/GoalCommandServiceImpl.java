@@ -6,6 +6,7 @@ import com.acme.nutrimove.platform.backend.goal.domain.model.commands.DeleteGoal
 import com.acme.nutrimove.platform.backend.goal.domain.model.commands.UpdateGoalCommand;
 import com.acme.nutrimove.platform.backend.goal.domain.services.GoalCommandService;
 import com.acme.nutrimove.platform.backend.goal.infrastructure.persistance.jpa.GoalRepository;
+import com.acme.nutrimove.platform.backend.user.infrastructure.persistence.jpa.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -14,14 +15,20 @@ import java.util.Optional;
 public class GoalCommandServiceImpl implements GoalCommandService {
 
     private final GoalRepository goalRepository;
+    private final UserRepository userRepository;
 
-    public GoalCommandServiceImpl(GoalRepository goalRepository) {
+    public GoalCommandServiceImpl(GoalRepository goalRepository, UserRepository userRepository) {
         this.goalRepository = goalRepository;
+        this.userRepository = userRepository;
     }
 
 
     @Override
     public Optional<Goal> handle(CreateGoalCommand command) {
+
+        if (!userRepository.existsById(command.userId())) {
+            throw new IllegalArgumentException("User not found with ID: " + command.userId());
+        }
         var goal = new Goal(command);
         var createdGoal = this.goalRepository.save(goal);
         return Optional.of(createdGoal);

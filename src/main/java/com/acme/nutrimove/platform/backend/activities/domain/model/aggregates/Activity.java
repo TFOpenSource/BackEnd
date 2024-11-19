@@ -1,9 +1,11 @@
 package com.acme.nutrimove.platform.backend.activities.domain.model.aggregates;
+
 import com.acme.nutrimove.platform.backend.activities.domain.model.commands.CreateActivityCommand;
+import com.acme.nutrimove.platform.backend.user.domain.model.aggregates.User;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.context.annotation.Configuration;
-
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Configuration
@@ -16,28 +18,30 @@ public class Activity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @Column(nullable = false)
     private String name;
 
+    @Setter
     @Column(nullable = false)
-    @Getter
     private String description;
 
+    @Setter
     @Column(nullable = false)
-    @Getter
     private Integer duration;
 
-    @Column(nullable = false)
-    @Getter
-    private Long userId;
+    @Setter
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    public Activity(CreateActivityCommand command) {
+    public Activity(CreateActivityCommand command, User user) {
         this.name = command.name();
         this.description = command.description();
         this.duration = command.duration();
-        this.userId = command.user_id();
-
+        this.user = user;
     }
 
+    // Constructor vacío requerido por JPA
     public Activity() {}
 }

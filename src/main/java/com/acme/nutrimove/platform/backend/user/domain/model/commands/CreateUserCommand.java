@@ -1,6 +1,7 @@
 package com.acme.nutrimove.platform.backend.user.domain.model.commands;
 
-import com.acme.nutrimove.platform.backend.user.domain.model.aggregates.User.Privacy;
+
+import com.acme.nutrimove.platform.backend.user.domain.ValueObjects.Privacy;
 
 public record CreateUserCommand(
         String name,
