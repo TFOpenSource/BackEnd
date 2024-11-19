@@ -28,7 +28,7 @@ public class Hydration {
     @Setter
     private Integer quantity_ml;
 
-    @Column(nullable = false)
+    @Column(name = "userId",nullable = false)
     @Getter
     private Long userId;
 

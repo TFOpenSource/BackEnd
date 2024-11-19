@@ -6,6 +6,7 @@ import com.acme.nutrimove.platform.backend.Hydration.domain.model.commands.Delet
 import com.acme.nutrimove.platform.backend.Hydration.domain.model.commands.UpdateHydrationCommand;
 import com.acme.nutrimove.platform.backend.Hydration.domain.service.HydrationCommandService;
 import com.acme.nutrimove.platform.backend.Hydration.infrastructure.persistance.jpa.HydrationRepository;
+import com.acme.nutrimove.platform.backend.user.infrastructure.persistence.jpa.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -15,13 +16,18 @@ import java.util.Optional;
 public class hydrationCommandServiceImpl implements HydrationCommandService {
 
     private final HydrationRepository hydrationRepository;
+    private final UserRepository userRepository;
 
-    public hydrationCommandServiceImpl(HydrationRepository hydrationRepository) {
+    public hydrationCommandServiceImpl(HydrationRepository hydrationRepository, UserRepository userRepository) {
         this.hydrationRepository = hydrationRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
     public Optional<Hydration> handle(CreateHydrationCommand command) {
+        if (!userRepository.existsById(command.userId())) {
+            throw new IllegalArgumentException("User not found with ID: " + command.userId());
+        }
         var hydration = new Hydration(command);
         var createHydration = this.hydrationRepository.save(hydration);
         return Optional.of(createHydration);

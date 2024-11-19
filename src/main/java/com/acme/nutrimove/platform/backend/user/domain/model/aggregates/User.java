@@ -1,5 +1,6 @@
 package com.acme.nutrimove.platform.backend.user.domain.model.aggregates;
 
+import com.acme.nutrimove.platform.backend.Hydration.domain.model.aggregates.Hydration;
 import com.acme.nutrimove.platform.backend.user.domain.ValueObjects.Privacy;
 import com.acme.nutrimove.platform.backend.user.domain.model.commands.CreateUserCommand;
 import jakarta.persistence.*;
@@ -10,6 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Configuration
@@ -47,6 +49,10 @@ public class User {
     @Column(nullable = false)
     private Privacy privacy;
 
+    @OneToMany(mappedBy = "userId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Hydration> hydrations;
+  
+  
     public User(CreateUserCommand command) {
         this.name = command.name();
         this.lastname = command.lastname();
