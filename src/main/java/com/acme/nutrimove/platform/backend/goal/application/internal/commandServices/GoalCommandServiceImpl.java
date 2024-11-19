@@ -26,9 +26,6 @@ public class GoalCommandServiceImpl implements GoalCommandService {
     @Override
     public Optional<Goal> handle(CreateGoalCommand command) {
 
-        if (!userRepository.existsById(command.userId())) {
-            throw new IllegalArgumentException("User not found with ID: " + command.userId());
-        }
         var goal = new Goal(command);
         var createdGoal = this.goalRepository.save(goal);
         return Optional.of(createdGoal);

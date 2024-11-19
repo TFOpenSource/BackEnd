@@ -11,6 +11,8 @@ import com.acme.nutrimove.platform.backend.goal.interfaces.rest.resources.Update
 import com.acme.nutrimove.platform.backend.goal.interfaces.rest.transform.CreateGoalCommandFromResourceAssembler;
 import com.acme.nutrimove.platform.backend.goal.interfaces.rest.transform.GoalResourceFromEntityAssembler;
 import com.acme.nutrimove.platform.backend.goal.interfaces.rest.transform.UpdateGoalCommandFromResourceAssembler;
+import com.acme.nutrimove.platform.backend.user.domain.model.aggregates.User;
+import com.acme.nutrimove.platform.backend.user.domain.services.UserQueryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -31,10 +33,12 @@ public class GoalController {
 
     private final GoalCommandService goalCommandService;
     private final GoalQueryService goalQueryService;
+    private final UserQueryService userQueryService;
 
-    public GoalController(GoalQueryService queryService, GoalCommandService commandService ) {
+    public GoalController(GoalQueryService queryService, GoalCommandService commandService, UserQueryService userQueryService) {
         this.goalCommandService = commandService;
         this.goalQueryService = queryService;
+        this.userQueryService = userQueryService;
     }
 
     @Operation(summary = "Create an Goal", description = "Create an Goal source with the provided news API")
@@ -45,9 +49,14 @@ public class GoalController {
 
     @PostMapping
     public ResponseEntity<GoalResource> createGoal(@RequestBody CreateGoalResource resource) {
-        Optional<Goal> goal = goalCommandService
-                .handle(CreateGoalCommandFromResourceAssembler.toCommand(resource));
-        return goal.map(source -> new ResponseEntity<>(GoalResourceFromEntityAssembler.toResourceFromEntity(source), CREATED))
+        Optional<User> userOptional = userQueryService.findById(resource.userId());
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        User user = userOptional.get();
+        var command = CreateGoalCommandFromResourceAssembler.toCommand(resource, user);
+        Optional<Goal> goal = goalCommandService.handle(command);
+        return goal.map(source -> ResponseEntity.status(CREATED).body(GoalResourceFromEntityAssembler.toResourceFromEntity(source)))
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
