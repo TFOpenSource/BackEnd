@@ -11,6 +11,8 @@ import com.acme.nutrimove.platform.backend.Hydration.interfaces.rest.resources.U
 import com.acme.nutrimove.platform.backend.Hydration.interfaces.rest.transform.CreateHydrationCommnadFromResourceAssembler;
 import com.acme.nutrimove.platform.backend.Hydration.interfaces.rest.transform.HydrationResourceFromEntityAssembler;
 import com.acme.nutrimove.platform.backend.Hydration.interfaces.rest.transform.UpdateHydrationCommandFromResourceAssembler;
+import com.acme.nutrimove.platform.backend.user.domain.model.aggregates.User;
+import com.acme.nutrimove.platform.backend.user.domain.services.UserQueryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -30,10 +32,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class HydrationController {
     private final HydrationQueryService hydrationQueryService;
     private final HydrationCommandService hydrationCommandService;
+    private final UserQueryService userQueryService;
 
-    public HydrationController(HydrationQueryService hydrationQueryService, HydrationCommandService hydrationCommandService) {
+    public HydrationController(HydrationQueryService hydrationQueryService, HydrationCommandService hydrationCommandService, UserQueryService userQueryService) {
         this.hydrationQueryService = hydrationQueryService;
         this.hydrationCommandService = hydrationCommandService;
+        this.userQueryService = userQueryService;
     }
 
     @Operation(summary = "Create a Hydration", description = "Create a Hydration source with the provided news API")
@@ -43,9 +47,15 @@ public class HydrationController {
     })
     @PostMapping
     public ResponseEntity<HydrationResource> createHydration(@RequestBody CreateHydrationResource resource) {
-        Optional<Hydration> hydration = hydrationCommandService
-                .handle(CreateHydrationCommnadFromResourceAssembler.toCommand(resource));
-        return hydration.map(source -> new ResponseEntity<>(HydrationResourceFromEntityAssembler.toResourceFromEntity(source), CREATED))
+        Optional<User> userOptional = userQueryService.findById(resource.userId());
+        if (userOptional.isEmpty()) {
+
+            return ResponseEntity.badRequest().build();
+        }
+        User user = userOptional.get();
+        var command = CreateHydrationCommnadFromResourceAssembler.toCommand(resource, user);
+        Optional<Hydration> hydration = hydrationCommandService.handle(command);
+        return hydration.map(createdHydration -> new ResponseEntity<>(HydrationResourceFromEntityAssembler.toResourceFromEntity(createdHydration), CREATED))
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
