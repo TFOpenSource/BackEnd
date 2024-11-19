@@ -37,6 +37,4 @@ public class UserQueryServiceImpl implements UserQueryService {
         return userRepository.findById(query.id());
     }
 
-    @Override
-    public Optional<User> findById(Long id) { return userRepository.findById(id); }
 }
