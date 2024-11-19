@@ -1,8 +1,10 @@
 package com.acme.nutrimove.platform.backend.goal.domain.model.commands;
 
+import com.acme.nutrimove.platform.backend.user.domain.model.aggregates.User;
+
 import java.time.LocalDate;
 
-public record CreateGoalCommand(String goal_type, LocalDate start_date, LocalDate end_date, Long userId) {
+public record CreateGoalCommand(String goal_type, LocalDate start_date, LocalDate end_date, User userId) {
 
     public CreateGoalCommand {
         if (goal_type == null || goal_type.isBlank())

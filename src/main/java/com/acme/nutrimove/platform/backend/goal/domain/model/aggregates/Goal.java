@@ -2,6 +2,7 @@ package com.acme.nutrimove.platform.backend.goal.domain.model.aggregates;
 
 
 import com.acme.nutrimove.platform.backend.goal.domain.model.commands.CreateGoalCommand;
+import com.acme.nutrimove.platform.backend.user.domain.model.aggregates.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,10 +36,10 @@ public class Goal {
     private LocalDate end_date;
 
 
-    @Column(name = "userId", nullable = false)
-    @Getter
     @Setter
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY) // Relación con User
+    @JoinColumn(name = "user_id", nullable = false)
+    private User userId;
 
     //JPA
     public Goal() {
