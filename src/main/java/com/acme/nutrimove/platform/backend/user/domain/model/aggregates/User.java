@@ -1,6 +1,7 @@
 package com.acme.nutrimove.platform.backend.user.domain.model.aggregates;
 
 import com.acme.nutrimove.platform.backend.Hydration.domain.model.aggregates.Hydration;
+import com.acme.nutrimove.platform.backend.subscriptions.domain.model.aggregates.Subscription;
 import com.acme.nutrimove.platform.backend.user.domain.ValueObjects.Privacy;
 import com.acme.nutrimove.platform.backend.user.domain.model.commands.CreateUserCommand;
 import jakarta.persistence.*;
@@ -49,7 +50,10 @@ public class User {
     @Column(nullable = false)
     private Privacy privacy;
 
-  
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Subscription subscription;
+
     public User(CreateUserCommand command) {
         this.name = command.name();
         this.lastname = command.lastname();
