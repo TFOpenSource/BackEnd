@@ -62,9 +62,9 @@ public class MedicalHistoryController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/{id}/{userId}")
-    public ResponseEntity<Void> deleteMedicalHistory(@PathVariable Long id, @PathVariable Long userId) {
-        commandService.handle(new DeleteMedicalHistoryCommand(id, userId));
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteMedicalHistory(@PathVariable Long id) {
+        commandService.handle(new DeleteMedicalHistoryCommand(id));
         return ResponseEntity.noContent().build();
     }
 }

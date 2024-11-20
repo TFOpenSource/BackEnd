@@ -46,6 +46,6 @@ public class MedicalHistoryCommandServiceImpl implements MedicalHistoryCommandSe
 
     @Override
     public void handle(DeleteMedicalHistoryCommand command) {
-        medicalHistoryRepository.deleteByIdAndUserId(command.id(), command.userId());
+        medicalHistoryRepository.deleteById(command.id());
     }
 }
