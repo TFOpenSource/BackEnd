@@ -6,6 +6,6 @@ import com.acme.nutrimove.platform.backend.goal.interfaces.rest.resources.Update
 public class UpdateGoalCommandFromResourceAssembler {
 
     public static UpdateGoalCommand toCommand(Long id, UpdateGoalResource resource) {
-        return new UpdateGoalCommand(id, resource.goal_type(), resource.start_date(), resource.end_date(), resource.userId());
+        return new UpdateGoalCommand(id, resource.goal_type(), resource.start_date(), resource.end_date());
     }
 }

@@ -6,6 +6,8 @@ import com.acme.nutrimove.platform.backend.goal.interfaces.rest.resources.GoalRe
 public class GoalResourceFromEntityAssembler {
 
     public static GoalResource toResourceFromEntity(Goal goal) {
-        return new GoalResource(goal.getId(), goal.getGoal_type(), goal.getStart_date(), goal.getEnd_date(), goal.getUserId());
+        return new GoalResource(goal.getId(), goal.getGoal_type(),
+                goal.getStart_date(), goal.getEnd_date(),
+                goal.getUserId() != null ? goal.getUserId().getId() : null);
     }
 }
