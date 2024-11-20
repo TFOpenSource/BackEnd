@@ -2,6 +2,7 @@ package com.acme.nutrimove.platform.backend.user.domain.model.aggregates;
 
 import com.acme.nutrimove.platform.backend.Hydration.domain.model.aggregates.Hydration;
 import com.acme.nutrimove.platform.backend.food.domain.model.aggregates.Food;
+import com.acme.nutrimove.platform.backend.subscriptions.domain.model.aggregates.Subscription;
 import com.acme.nutrimove.platform.backend.user.domain.ValueObjects.Privacy;
 import com.acme.nutrimove.platform.backend.user.domain.model.commands.CreateUserCommand;
 import jakarta.persistence.*;
@@ -56,6 +57,9 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Food> foods = new ArrayList<>();
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Subscription subscription;
 
     public User(CreateUserCommand command) {
         this.name = command.name();

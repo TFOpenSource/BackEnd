@@ -2,6 +2,7 @@ package com.acme.nutrimove.platform.backend.Hydration.domain.model.aggregates;
 
 
 import com.acme.nutrimove.platform.backend.Hydration.domain.model.commands.CreateHydrationCommand;
+import com.acme.nutrimove.platform.backend.user.domain.model.aggregates.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,9 +29,10 @@ public class Hydration {
     @Setter
     private Integer quantity_ml;
 
-    @Column(name = "userId",nullable = false)
-    @Getter
-    private Long userId;
+    @Setter
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User userId;
 
     public Hydration() {}
 

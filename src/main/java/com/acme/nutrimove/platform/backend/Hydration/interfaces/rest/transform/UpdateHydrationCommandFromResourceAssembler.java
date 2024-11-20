@@ -6,6 +6,6 @@ import com.acme.nutrimove.platform.backend.Hydration.interfaces.rest.resources.U
 public class UpdateHydrationCommandFromResourceAssembler {
 
     public static UpdateHydrationCommand toCommand(Long id, UpdateHydrationResource resource) {
-        return new UpdateHydrationCommand(id, resource.date(), resource.quantity_ml(), resource.userId());
+        return new UpdateHydrationCommand(id, resource.date(), resource.quantity_ml());
     }
 }

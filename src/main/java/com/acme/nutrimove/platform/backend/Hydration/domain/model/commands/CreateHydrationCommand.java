@@ -1,8 +1,10 @@
 package com.acme.nutrimove.platform.backend.Hydration.domain.model.commands;
 
+import com.acme.nutrimove.platform.backend.user.domain.model.aggregates.User;
+
 import java.time.LocalDate;
 
-public record CreateHydrationCommand(LocalDate date, Integer quantity_ml, Long userId) {
+public record CreateHydrationCommand(LocalDate date, Integer quantity_ml, User userId) {
 
     public CreateHydrationCommand {
 
