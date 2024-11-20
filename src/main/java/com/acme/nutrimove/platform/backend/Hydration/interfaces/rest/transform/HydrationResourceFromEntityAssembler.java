@@ -6,6 +6,7 @@ import com.acme.nutrimove.platform.backend.Hydration.interfaces.rest.resources.H
 public class HydrationResourceFromEntityAssembler {
 
     public static HydrationResource toResourceFromEntity(Hydration hydration) {
-        return new HydrationResource(hydration.getId(), hydration.getDate(), hydration.getQuantity_ml(), hydration.getUserId());
+        return new HydrationResource(hydration.getId(), hydration.getDate(), hydration.getQuantity_ml(),
+                hydration.getUserId() != null ? hydration.getUserId().getId() : null);
     }
 }

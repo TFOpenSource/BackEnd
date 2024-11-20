@@ -25,9 +25,12 @@ public class hydrationCommandServiceImpl implements HydrationCommandService {
 
     @Override
     public Optional<Hydration> handle(CreateHydrationCommand command) {
-        if (!userRepository.existsById(command.userId())) {
-            throw new IllegalArgumentException("User not found with ID: " + command.userId());
+
+        var user = userRepository.findById(command.userId().getId());
+        if(user.isEmpty()){
+            return Optional.empty();
         }
+
         var hydration = new Hydration(command);
         var createHydration = this.hydrationRepository.save(hydration);
         return Optional.of(createHydration);

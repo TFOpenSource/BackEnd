@@ -50,10 +50,9 @@ public class User {
     @Column(nullable = false)
     private Privacy privacy;
 
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Subscription subscription;
-
-
 
     public User(CreateUserCommand command) {
         this.name = command.name();
