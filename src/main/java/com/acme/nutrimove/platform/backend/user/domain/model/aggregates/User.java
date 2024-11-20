@@ -49,9 +49,6 @@ public class User {
     @Column(nullable = false)
     private Privacy privacy;
 
-    @OneToMany(mappedBy = "userId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Hydration> hydrations;
-  
   
     public User(CreateUserCommand command) {
         this.name = command.name();
