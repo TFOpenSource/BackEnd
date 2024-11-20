@@ -2,6 +2,7 @@ package com.acme.nutrimove.platform.backend.activities.domain.model.aggregates;
 
 import com.acme.nutrimove.platform.backend.activities.domain.model.commands.CreateActivityCommand;
 import com.acme.nutrimove.platform.backend.user.domain.model.aggregates.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,6 +33,7 @@ public class Activity {
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
